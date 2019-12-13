@@ -8,7 +8,7 @@ from sys import exit
 def retrieve_gpus ():
 	gpus = {}
 	lines = subprocess.run(
-		['/usr/bin/env', 'nvidia-smi', '--format=csv,noheader,nounits', '--query-gpu=index,gpu_uuid,name,memory.used,memory.total,utilization.gpu'],
+		['/usr/bin/env', 'nvidia-smi', '--format=csv,noheader,nounits', '--query-gpu=index,gpu_uuid,name,memory.used,memory.total,utilization.gpu,persistence_mode'],
 		stdout=subprocess.PIPE
 	).stdout.decode().strip().split('\n')
 	for line in lines:
@@ -19,6 +19,7 @@ def retrieve_gpus ():
 			'memory_used': int(values[3]),
 			'memory_total': int(values[4]),
 			'utilization_gpu': int(values[5]),
+			'persistence_mode': (values[6] == 'Enabled')
 		}
 	return gpus
 
@@ -51,6 +52,10 @@ def retrieve_processes ():
 
 gpus = retrieve_gpus()
 processes = retrieve_processes()
+
+if any(map(lambda g: not g['persistence_mode'], gpus.values())):
+	print('Consider enabling persistence mode on your GPU(s) for faster response.')
+	print('For more information: https://docs.nvidia.com/deploy/driver-persistence/')
 
 print('+----------------------------+------+-------------------+---------+')
 print('| GPU                        | %GPU | VRAM              | PROCESS |')
