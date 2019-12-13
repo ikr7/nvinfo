@@ -61,7 +61,7 @@ print('+----------------------------+------+-------------------+---------+')
 print('| GPU                        | %GPU | VRAM              | PROCESS |')
 print('|----------------------------+------+-------------------+---------|')
 
-for gpu_uuid, gpu in gpus.items():
+for gpu_uuid, gpu in sorted(gpus.items(), key=lambda g: g[1]['index']):
 	print('| {:3d} {:22} | {:3d}% | {:5d} / {:5d} MiB | {} |'.format(
 		gpu['index'],
 		'(' + gpu['name'] + ')',
