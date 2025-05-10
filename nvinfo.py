@@ -59,8 +59,6 @@ if any(map(lambda g: not g['persistence_mode'], gpus.values())):
 
 max_gpu_name_length = max(map(lambda g: len(g['name']), gpus.values()))
 
-print(max_gpu_name_length)
-
 print('+------' + '-' * max_gpu_name_length + '--+------+-------------------+---------+')
 print('| GPU  ' + ' ' * max_gpu_name_length + '  | %GPU | VRAM              | PROCESS |')
 print('+------' + '-' * max_gpu_name_length + '--+------+-------------------+---------+')
