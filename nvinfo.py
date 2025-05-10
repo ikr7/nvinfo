@@ -57,9 +57,14 @@ if any(map(lambda g: not g['persistence_mode'], gpus.values())):
 	print('Consider enabling persistence mode on your GPU(s) for faster response.')
 	print('For more information: https://docs.nvidia.com/deploy/driver-persistence/')
 
-print('+----------------------------+------+-------------------+---------+')
-print('| GPU                        | %GPU | VRAM              | PROCESS |')
-print('|----------------------------+------+-------------------+---------|')
+max_gpu_name_length = max(map(lambda g: len(g['name']), gpus.values()))
+
+print(max_gpu_name_length)
+
+print('+------' + '-' * max_gpu_name_length + '--+------+-------------------+---------+')
+print('| GPU  ' + ' ' * max_gpu_name_length + '  | %GPU | VRAM              | PROCESS |')
+print('+------' + '-' * max_gpu_name_length + '--+------+-------------------+---------+')
+
 
 for gpu_uuid, gpu in sorted(gpus.items(), key=lambda g: g[1]['index']):
 	print('| {:3d} {:22} | {:3d}% | {:5d} / {:5d} MiB | {} |'.format(
@@ -71,7 +76,9 @@ for gpu_uuid, gpu in sorted(gpus.items(), key=lambda g: g[1]['index']):
 		'Running' if any(map(lambda p: p['gpu_uuid'] == gpu_uuid, processes)) else '-------'
 	))
 
-print('|=================================================================|')
+separator = '|=============================================' + '=' * max_gpu_name_length + '|'
+
+print(separator)
 
 if len(processes) == 0:
 	print('| No running processes found                                      |')
